@@ -8,7 +8,7 @@ import {
 
 const Sidebar = () => {
   return (
-    <div className="bg-gray-100  w-64 flex flex-col justify-between px-6 py-4 shadow-lg">
+    <div className="bg-[#F9FAFC] w-64 flex flex-col justify-between px-6 py-4 shadow-lg">
       <div>
         <div>
           <h1 className="text-blue-600 text-2xl font-bold mb-2">SCAN T</h1>
