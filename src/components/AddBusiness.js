@@ -12,7 +12,7 @@ const AddBusiness = () => {
 
       <div class="grid grid-cols-3 gap-4 mt-2">
        
-  <div class="col-span-2 text-xl sm:text-3xl  font-semibold">Enter your Business Details:</div>
+  <div class="col-span-2 text-xl sm:text-3xl  font-semibold">Enter your Business Details: </div>
   <div class="p-2 sm:p-4 col-span-1 bg-blue-200 text-blue-600 text-sm sm:text-2xl font-semibold rounded-lg ">Add Another Bussiness + </div>
 </div>
 <input type="text" placeholder="GSTIN NUMBER *" class="border bg-gray-100 border-gray-200 p-2 rounded-lg w-1/3 shadow-[0_2px_4px_rgba(0,0,0,0.7)]" required/><br/>
