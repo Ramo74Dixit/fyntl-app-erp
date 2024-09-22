@@ -275,7 +275,7 @@ const EwayBills = () => {
           Select Template
         </button>
         <label className="bg-gray-100 text-blue-600 font-semibold rounded-lg px-4 py-2 cursor-pointer">
-          Next
+          Next 
          
         </label>
       </div>
