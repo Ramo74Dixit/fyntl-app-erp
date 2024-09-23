@@ -1,6 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 const SignUp = () => {
+  const [phone, setPhone] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate phone number (basic validation)
+    if (!phone || phone.length !== 10) {
+      setErrorMessage("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("https://fyntl.sangrahinnovations.com/user/verify", {
+        contact: `+91${phone}`,
+      });
+
+      // Check if the response status is 200
+      if (response.status === 200) {
+        setSuccessMessage("Verification successful. Please check your messages.");
+        setErrorMessage(""); // Clear any existing error message
+      } else {
+        setErrorMessage("Verification failed. Please try again.");
+      }
+    } catch (error) {
+      // Handle errors
+      setErrorMessage("An error occurred while verifying. Please try again later.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex items-center justify-center px-4">
       <div className="relative w-full max-w-lg p-8 space-y-8 bg-white bg-opacity-90 rounded-3xl shadow-xl transform transition-all duration-500 hover:shadow-2xl hover:scale-105">
@@ -12,32 +44,24 @@ const SignUp = () => {
           <p className="mt-2 text-gray-600">Sign up and be part of something amazing</p>
         </div>
 
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
-            <input
-              type="text"
-              placeholder="Enter your name"
-              className="w-full px-4 py-3 mt-1 bg-white bg-opacity-80 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email Address</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full px-4 py-3 mt-1 bg-white bg-opacity-80 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="w-full px-4 py-3 mt-1 bg-white bg-opacity-80 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
-            />
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
+            <div className="flex">
+              <span className="inline-flex items-center px-3 bg-gray-100 text-gray-600 rounded-l-full">
+                +91
+              </span>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Enter your phone number"
+                className="w-full px-4 py-3 bg-white bg-opacity-80 border border-gray-300 rounded-r-full shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
+              />
+            </div>
+            {errorMessage && <p className="mt-2 text-sm text-red-500">{errorMessage}</p>}
           </div>
 
           <button
@@ -47,6 +71,8 @@ const SignUp = () => {
             Sign Up
           </button>
         </form>
+
+        {successMessage && <p className="mt-4 text-center text-green-500">{successMessage}</p>}
 
         <div className="text-center mt-6">
           <p className="text-gray-600">Already have an account?</p>
