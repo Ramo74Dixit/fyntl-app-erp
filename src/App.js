@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Sidebar from './components/sidebar';  
 import Dashboard from './components/Dashboard';
 import AddBusiness from './components/AddBusiness';
@@ -15,13 +15,16 @@ import Messages from './components/Messages';
 import Helps from './components/Helps';
 import Settings from './components/Settings';
 import Logout from './components/Logout';
-
+import Signup from './components/Signup';
+import Login from './components/Login'
 function App() {
+  const location = useLocation();
+  const isSignupPage = location.pathname === '/signup' || location.pathname === '/login';
   return (
-    <Router>
-      <div className="flex">
-        <Sidebar />
-        <div className="flex-grow flex flex-col">
+    <div className="flex">
+      {!isSignupPage && <Sidebar />} 
+      <div className="flex-grow flex flex-col">
+        {!isSignupPage && (
           <nav className="bg-[#F9FAFC] p-4 flex justify-between shadow-lg items-center">
             <div className="relative">
               <input
@@ -51,29 +54,37 @@ function App() {
               </svg>
             </div>
           </nav>
-
-          <div className="flex-grow">
-            <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/add-business" element={<AddBusiness />} />
-              <Route path="/your-business" element={<YourBusiness />} />
-              <Route path="/generate-bill" element={<GenerateBill />} />
-              <Route path="/generated-bills" element={<GeneratedBills />} />
-              <Route path="/gst-invoice" element={<GstInvoice />} />
-              <Route path="/eway-bills" element={<EwayBills />} />
-              <Route path="/payments" element={<Payments />} />
-              <Route path="/activity" element={<Activity />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/messages" element={<Messages />} />
-              <Route path="/helps" element={<Helps />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/logout" element={<Logout />} />
-            </Routes>
-          </div>
+        )}
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/add-business" element={<AddBusiness />} />
+            <Route path="/your-business" element={<YourBusiness />} />
+            <Route path="/generate-bill" element={<GenerateBill />} />
+            <Route path="/generated-bills" element={<GeneratedBills />} />
+            <Route path="/gst-invoice" element={<GstInvoice />} />
+            <Route path="/eway-bills" element={<EwayBills />} />
+            <Route path="/payments" element={<Payments />} />
+            <Route path="/activity" element={<Activity />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/helps" element={<Helps />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
         </div>
       </div>
+    </div>
+  );
+}
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
     </Router>
   );
 }
 
-export default App;
+export default AppWrapper;
