@@ -16,7 +16,7 @@ import Helps from './components/Helps';
 import Settings from './components/Settings';
 import Logout from './components/Logout';
 import Signup from './components/Signup';
-import Login from './components/Login'
+import Login from './components/Login';
 function App() {
   const location = useLocation();
   const isSignupPage = location.pathname === '/signup' || location.pathname === '/login';
@@ -73,6 +73,7 @@ function App() {
             <Route path="/logout" element={<Logout />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+
           </Routes>
         </div>
       </div>
