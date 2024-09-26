@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Building from '../assets/building.png';
 import edit from '../assets/edit.png';
 
-// Business card component to display each business's info
 const BusinessCard = ({ gstin, legalName, tradeName }) => {
   return (
     <div className="bg-blue-100 rounded-lg p-4 shadow-md">
-      <p>{gstin}</p>
-      <p>{legalName}</p>
-      <p>{tradeName}</p>
+      <p><strong>GSTIN:</strong> {gstin}</p>
+      <p><strong>Legal Name:</strong> {legalName}</p>
+      <p><strong>Trade Name:</strong> {tradeName}</p>
       <div className="mt-2 flex justify-end">
         <button className="text-sm text-gray-500 flex items-center">
           <img src={edit} alt='edit icon' className='mr-1 w-4 mt-1' /> edit
@@ -21,33 +20,37 @@ const BusinessCard = ({ gstin, legalName, tradeName }) => {
 const YourBusiness = () => {
   const [businesses, setBusinesses] = useState([]);  // Initialize with an empty array for businesses
   const [loading, setLoading] = useState(true);  // For showing a loading state
+  const [error, setError] = useState(null);  // For capturing errors
 
   useEffect(() => {
     // Fetch API data with authorization token
-    fetch('https://fyntl.sangrahinnovations.com/user/myBusiness', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2OTYxMzRmYjA3MTBjODU4OWQ4OWMyOCIsImNvbnRhY3QiOiIrOTE3OTAyMjY4ODA2IiwiY3JlYXRlZF9hdCI6IjIwMjQtMDctMTVUMTU6MzY6MDguMzYxWiIsInN1YnNjcmlwdGlvbl90aWxsIjoiMjAyNS0wNy0yNlQwNjoyOTozNS45NTRaIiwiYWNjZXNzX3R5cGUiOiJ0cmlhbCIsImZ1bGxfbmFtZSI6IlNoaXZhbSBSYWpwb290In0sInVzZXJBZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDIuMCIsImlhdCI6MTcyNzA3MDkwMywiZXhwIjoxNzI3MTU3MzAzfQ.AGLwwkDfnU2yG4vIKywBFQ25HJbOyUEq3c4OjG-BM0w')}`,  // Ensure the token is correct
-      },
-    })
-      .then(response => {
+    const fetchBusinesses = async () => {
+      try {
+        const response = await fetch('https://fyntl.sangrahinnovations.com/user/myBusiness', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`, // Ensure the token is correct
+          },
+        });
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);  // Handle errors like 401
         }
-        return response.json();
-      })
-      .then(data => {
-        setLoading(false);  // Turn off loading state
+
+        const data = await response.json();
         if (data && data.data) {
           setBusinesses(data.data);  // Set businesses data from the response
         } else {
           setBusinesses([]);  // Fallback if no businesses are returned
         }
-      })
-      .catch(error => {
-        setLoading(false);
-        console.error('Error fetching businesses:', error);
-      });
+      } catch (error) {
+        setError(error.message);  // Capture the error message
+      } finally {
+        setLoading(false);  // Turn off loading state
+      }
+    };
+
+    fetchBusinesses();
   }, []);
 
   return (
@@ -68,9 +71,11 @@ const YourBusiness = () => {
         </div>
       </div>
 
-      {/* Loading state */}
+      {/* Loading and Error state */}
       {loading ? (
         <p>Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-8">
           {/* Check if there are businesses */}

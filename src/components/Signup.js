@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // for navigation
 
 const SignUp = () => {
   const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [step, setStep] = useState(1); // Step 1: Phone input, Step 2: OTP verification
+  const [authToken, setAuthToken] = useState(""); // Store initial authToken
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate(); // Hook to navigate to AddBusiness
 
-  const handleSubmit = async (e) => {
+  // Handle phone number submission and get authToken
+  const handlePhoneSubmit = async (e) => {
     e.preventDefault();
 
     // Validate phone number (basic validation)
@@ -20,16 +26,54 @@ const SignUp = () => {
         contact: `+91${phone}`,
       });
 
-      // Check if the response status is 200
-      if (response.status === 200) {
-        setSuccessMessage("Verification successful. Please check your messages.");
+      if (response.status === 200 && response.data.authToken) {
+        setAuthToken(response.data.authToken); // Save the authToken for later
+        setStep(2); // Move to OTP input step
+        setSuccessMessage("Verification code sent. Please check your messages.");
         setErrorMessage(""); // Clear any existing error message
       } else {
-        setErrorMessage("Verification failed. Please try again.");
+        setErrorMessage("Failed to send verification code. Please try again.");
       }
     } catch (error) {
-      // Handle errors
-      setErrorMessage("An error occurred while verifying. Please try again later.");
+      setErrorMessage("An error occurred while sending verification code. Please try again later.");
+    }
+  };
+
+  // Handle OTP submission and verification
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate OTP (basic validation)
+    if (!otp || otp.length !== 6) {
+      setErrorMessage("Please enter a valid 6-digit OTP.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "https://fyntl.sangrahinnovations.com/user/optVerification",
+        { otp: otp }, // OTP is sent in the body
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`, // Send authToken in headers
+          },
+        }
+      );
+
+      if (response.status === 200 && response.data.authToken) {
+        const newAuthToken = response.data.authToken;
+        localStorage.setItem('authToken', newAuthToken); // Save the new authToken in localStorage
+        setAuthToken(newAuthToken); // Update authToken in state
+        setSuccessMessage("OTP verified successfully.");
+        setErrorMessage(""); // Clear any existing error message
+
+        // Navigate to AddBusiness after OTP verification
+        navigate("/add-business"); // Redirect to AddBusiness page
+      } else {
+        setErrorMessage("OTP verification failed. Please try again.");
+      }
+    } catch (error) {
+      setErrorMessage("An error occurred while verifying OTP. Please try again later.");
     }
   };
 
@@ -44,7 +88,8 @@ const SignUp = () => {
           <p className="mt-2 text-gray-600">Sign up and be part of something amazing</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={step === 1 ? handlePhoneSubmit : handleOtpSubmit} className="space-y-6">
+          {/* Phone Number Input */}
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
             <div className="flex">
@@ -59,21 +104,41 @@ const SignUp = () => {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Enter your phone number"
                 className="w-full px-4 py-3 bg-white bg-opacity-80 border border-gray-300 rounded-r-full shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
+                disabled={step === 2} // Disable input after OTP is sent
               />
             </div>
             {errorMessage && <p className="mt-2 text-sm text-red-500">{errorMessage}</p>}
           </div>
 
+          {/* OTP Input (only visible on step 2) */}
+          {step === 2 && (
+            <div>
+              <label htmlFor="otp" className="block text-sm font-medium text-gray-700">Enter OTP</label>
+              <input
+                type="text"
+                id="otp"
+                name="otp"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="Enter the 6-digit OTP"
+                className="w-full px-4 py-3 bg-white bg-opacity-80 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
+              />
+              {errorMessage && <p className="mt-2 text-sm text-red-500">{errorMessage}</p>}
+            </div>
+          )}
+
           <button
             type="submit"
             className="w-full py-3 text-lg font-bold text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-lg hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-4 focus:ring-purple-400 transform hover:scale-105 transition duration-300"
           >
-            Sign Up
+            {step === 1 ? "Sign Up" : "Verify OTP"}
           </button>
         </form>
 
+        {/* Success message */}
         {successMessage && <p className="mt-4 text-center text-green-500">{successMessage}</p>}
 
+        {/* Login link */}
         <div className="text-center mt-6">
           <p className="text-gray-600">Already have an account?</p>
           <a
@@ -84,6 +149,7 @@ const SignUp = () => {
           </a>
         </div>
 
+        {/* Inspirational quote */}
         <div className="mt-8 text-center">
           <blockquote className="text-sm italic text-gray-500">
             "The future belongs to those who believe in the beauty of their dreams."
