@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaBusinessTime } from 'react-icons/fa';
+import TemplateModal from './TemplateModal'; // Import the modal component
 
 const EwayBills = () => {
   const [isLeftEnabled, setIsLeftEnabled] = useState(false);
@@ -12,10 +13,17 @@ const EwayBills = () => {
     taxPercent: '0',
     amount: '',
   }]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   // Function to add a new row to the table
   const addRow = () => {
     setRows([...rows, { itemName: '', quantity: '', unit: 'NONE', price: '', taxPercent: '0', amount: '' }]);
+  };
+
+  const handleTemplateSelect = (template) => {
+    setSelectedTemplate(template);
+    setIsModalOpen(false);
   };
 
   return (
@@ -27,21 +35,19 @@ const EwayBills = () => {
       <div className='text-xl sm:text-3xl mt-2 font-semibold'>
         Generate E-Way Bills
       </div>
+
+      {/* Your existing form content goes here */}
       <div className="flex space-x-4 mt-4">
-        <button className="bg-transparent text-black px-4 py-2">
-          Invoice
-        </button>
+        <button className="bg-transparent text-black px-4 py-2">Invoice</button>
         <label className="bg-blue-500 text-white rounded-lg px-4 py-2 cursor-pointer">
           Upload Doc.
           <input type="file" className="hidden" />
         </label>
       </div>
-      <div className='text-xl sm:text-2xl mt-2 '>
-        Choose Transportation
-      </div>
-
+      
+      {/* Transportation Options */}
       <div className="flex space-x-4">
-        {/* Left Section */}
+        {/* Left Section (Road) */}
         <div className="w-1/2 p-4 relative">
           <label className="flex items-center mb-4">
             <input
@@ -55,40 +61,20 @@ const EwayBills = () => {
             />
             <span>Transportation via road</span>
           </label>
-
-          {/* Input Fields for Left Section */}
           <div className="space-y-8 relative">
-            {/* Input 1 */}
             <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">
-                Transporter Id
-              </span>
-              <input
-                type="text"
-                className="w-full border border-blue-500 rounded-lg p-2"
-                placeholder="Input 1"
-                disabled={!isLeftEnabled}
-              />
+              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Transporter Id</span>
+              <input type="text" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isLeftEnabled} />
             </div>
-
-            {/* Input 2 */}
             <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">
-                Vehicle Number
-              </span>
-              <input
-                type="text"
-                className="w-full border border-blue-500 rounded-lg p-2"
-                placeholder="Input 2"
-                disabled={!isLeftEnabled}
-              />
+              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Vehicle Number</span>
+              <input type="text" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isLeftEnabled} />
             </div>
-
           </div>
         </div>
 
-        {/* Right Section */}
-        <div className="w-2/2 p-4 relative">
+        {/* Right Section (Rail/Air/Ship) */}
+        <div className="w-1/2 p-4 relative">
           <label className="flex items-center mb-4">
             <input
               type="radio"
@@ -101,61 +87,30 @@ const EwayBills = () => {
             />
             <span>Transportation via rail, air, or ship</span>
           </label>
-
-          {/* Input Fields for Right Section */}
           <div className="space-y-8 relative">
-            {/* Input 1 */}
             <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">
-                Transporter Id
-              </span>
-              <input
-                type="text"
-                className="w-full border border-blue-500 rounded-lg p-2"
-                placeholder="Input 1"
-                disabled={!isRightEnabled}
-              />
+              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Transporter Id</span>
+              <input type="text" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isRightEnabled} />
             </div>
-
-            {/* Input 2 */}
             <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">
-                Transport Document Number
-              </span>
-              <input
-                type="text"
-                className="w-full border border-blue-500 rounded-lg p-2"
-                placeholder="Input 2"
-                disabled={!isRightEnabled}
-              />
+              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Transport Document Number</span>
+              <input type="text" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isRightEnabled} />
             </div>
-
-            {/* Input 3 */}
             <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">
-                Date on the document
-              </span>
-              <input
-                type="date"
-                className="w-full border border-blue-500 rounded-lg p-2"
-                disabled={!isRightEnabled}
-              />
+              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Date on the document</span>
+              <input type="date" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isRightEnabled} />
             </div>
           </div>
         </div>
       </div>
-      <div className='text-xl sm:text-3xl mt-2 font-semibold'>
-        Item Details-
-      </div>
 
-      {/* Add Row Button */}
+      {/* Item Details */}
+      <div className='text-xl sm:text-3xl mt-2 font-semibold'>Item Details-</div>
       <div className="flex justify-start mt-2 mb-2">
-        <button onClick={addRow} className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded">
-          Edit/Add Item
-        </button>
+        <button onClick={addRow} className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded">Edit/Add Item</button>
       </div>
 
-      {/* Table */}
+      {/* Items Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-lg">
           <thead className="bg-gray-100">
@@ -164,13 +119,13 @@ const EwayBills = () => {
               <th className="px-4 py-2 border" rowSpan="2">Item Name</th>
               <th className="px-4 py-2 border" rowSpan="2">Quantity</th>
               <th className="px-4 py-2 border" rowSpan="2">Unit</th>
-              <th className="px-4 py-2 border" rowSpan="1">Price/Unit</th>
+              <th className="px-4 py-2 border">Price/Unit</th>
               <th className="px-4 py-2 border" colSpan="2">Tax (%)</th>
               <th className="px-4 py-2 border" rowSpan="2">Amount</th>
             </tr>
             <tr>
               <th className="px-4 py-2 border">Price without tax</th>
-              <th className="px-4 py-2 border">percent(%)</th>
+              <th className="px-4 py-2 border">Percent (%)</th>
               <th className="px-4 py-2 border">Amount</th>
             </tr>
           </thead>
@@ -181,7 +136,7 @@ const EwayBills = () => {
                 <td className="px-4 py-2 border">
                   <input
                     type="text"
-                    className="w-full p-2 "
+                    className="w-full p-2"
                     value={row.itemName}
                     onChange={(e) => {
                       const updatedRows = [...rows];
@@ -193,7 +148,7 @@ const EwayBills = () => {
                 <td className="px-4 py-2 border">
                   <input
                     type="text"
-                    className="w-full p-2 "
+                    className="w-full p-2"
                     value={row.quantity}
                     onChange={(e) => {
                       const updatedRows = [...rows];
@@ -204,7 +159,7 @@ const EwayBills = () => {
                 </td>
                 <td className="px-4 py-2 border">
                   <select
-                    className="w-full p-2 "
+                    className="w-full p-2"
                     value={row.unit}
                     onChange={(e) => {
                       const updatedRows = [...rows];
@@ -232,23 +187,11 @@ const EwayBills = () => {
                 <td className="px-4 py-2 border">
                   <input
                     type="text"
-                    className="w-full p-2 "
+                    className="w-full p-2"
                     value={row.taxPercent}
                     onChange={(e) => {
                       const updatedRows = [...rows];
                       updatedRows[index].taxPercent = e.target.value;
-                      setRows(updatedRows);
-                    }}
-                  />
-                </td>
-                <td className="px-4 py-2 border">
-                  <input
-                    type="text"
-                    className="w-full p-2"
-                    value={row.amount}
-                    onChange={(e) => {
-                      const updatedRows = [...rows];
-                      updatedRows[index].amount = e.target.value;
                       setRows(updatedRows);
                     }}
                   />
@@ -270,15 +213,29 @@ const EwayBills = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Action Buttons */}
       <div className="flex justify-end space-x-4 mt-4">
-        <button className="bg-gray-100 text-blue-600 font-semibold rounded-lg px-4 py-2 cursor-pointer">
+        <button className="bg-gray-100 text-blue-600 font-semibold rounded-lg px-4 py-2 cursor-pointer" onClick={() => setIsModalOpen(true)}>
           Select Template
         </button>
         <label className="bg-gray-100 text-blue-600 font-semibold rounded-lg px-4 py-2 cursor-pointer">
-          Next 
-         
+          Next
         </label>
       </div>
+
+      {/* Render the template modal */}
+      <TemplateModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSelect={handleTemplateSelect}
+      />
+
+      {selectedTemplate && (
+        <div className="mt-4">
+          <h4 className="text-lg font-semibold">Selected Template: {selectedTemplate.name}</h4>
+        </div>
+      )}
     </div>
   );
 };
