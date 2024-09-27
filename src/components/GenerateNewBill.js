@@ -5,6 +5,7 @@ import Share from '../assets/Share.png';
 import Download from '../assets/Download.png';
 import Select from '../assets/Select.png';
 import Next from '../assets/Next.png';
+import { MdDelete } from "react-icons/md";
 
 const GenerateNewBill = () => {
     const [rows, setRows] = useState([createRow()]); // Initially one row
@@ -206,12 +207,13 @@ const GenerateNewBill = () => {
             <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-40" rowSpan="1">Price/Unit</th>
             <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-36" colspan="2">Tax (%)</th>
             <th className="border-b-2 border-[#989BAA] font-medium text-lg w-36" rowSpan="2">Amount</th>
-          
+            <th className="border-b-2 border-l-2 border-[#989BAA] font-medium text-lg" rowSpan="2"></th>
           </tr>
           <tr>
           <th className="border-b-2 border-r-2 border-[#989BAA] font-normal text-lg" colspan="1">(without tax)</th>
           <th className="border-b-2 border-r-2 border-[#989BAA] font-normal text-lg" colspan="1">percent(%)</th>
           <th className="border-b-2 border-r-2 border-[#989BAA] font-normal text-lg" colspan="1">Amount</th>
+          
           </tr>
         </thead>
           <tbody>
@@ -224,15 +226,14 @@ const GenerateNewBill = () => {
                 <td className=" p-1 border-r-2 border-[#989BAA]  "><input type="number" className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl" /></td>
                 <td className=" p-1 border-r-2 border-[#989BAA]  "><input type="number" className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl" /></td>
                 <td className=" p-1 border-r-2 border-[#989BAA]  "><input type="number" className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl" /></td>
-                <td className=" p-1"><input type="number" className="border p-1 w-full rounded-lg" /></td>
-                {/* <td className="p-3 border border-[#989BAA] ">
+                <td className=" p-1 "><input type="number" className="border p-1 w-full rounded-lg" /></td>
+                <td className="px-3 border-l-2 border-[#989BAA] text-center">
                   <button 
                     onClick={() => deleteRow(index)} 
-                    className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                   >
-                    Delete
+                    <MdDelete className="text-gray-600 w-6 h-10 "/>
                   </button>
-                </td> */}
+                </td>
               </tr>
             ))}
             <tr className=" font-semibold bg-[#E7EDFF] text-[#1436FF]">
@@ -243,6 +244,8 @@ const GenerateNewBill = () => {
               <td className=" p-3 border-r-2 border-[#989BAA] text-right "></td>
               <td className=" p-3 border-r-2 border-[#989BAA] text-right ">0</td>
               <td className=" p-3 text-right ">0</td>
+            <th className=" border-l-2 border-[#989BAA] font-normal text-lg"></th>
+
             </tr>
           </tbody>
         </table>
