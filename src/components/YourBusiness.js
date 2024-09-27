@@ -27,7 +27,7 @@ const YourBusiness = () => {
     fetch('https://fyntl.sangrahinnovations.com/user/myBusiness', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2OTYxMzRmYjA3MTBjODU4OWQ4OWMyOCIsImNvbnRhY3QiOiIrOTE3OTAyMjY4ODA2IiwiY3JlYXRlZF9hdCI6IjIwMjQtMDctMTVUMTU6MzY6MDguMzYxWiIsInN1YnNjcmlwdGlvbl90aWxsIjoiMjAyNS0wNy0yNlQwNjoyOTozNS45NTRaIiwiYWNjZXNzX3R5cGUiOiJ0cmlhbCIsImZ1bGxfbmFtZSI6IlNoaXZhbSBSYWpwb290In0sInVzZXJBZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDIuMCIsImlhdCI6MTcyNzA3MDkwMywiZXhwIjoxNzI3MTU3MzAzfQ.AGLwwkDfnU2yG4vIKywBFQ25HJbOyUEq3c4OjG-BM0w')}`,  // Ensure the token is correct
+        Authorization: `Bearer ${localStorage.getItem('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2YWNhODYxZGZkMzdmZTRhMTI3ZmExZSIsImNvbnRhY3QiOiIrOTE5MjIyMjI2NjY2IiwiY3JlYXRlZF9hdCI6IjIwMjQtMDgtMDFUMDg6MzM6MzkuODcxWiIsInN1YnNjcmlwdGlvbl90aWxsIjoiMjAyNC0xMC0xMlQwOTozNToyOS4zMThaIiwiYWNjZXNzX3R5cGUiOiJ0cmlhbCIsInNvY2tldF9kYXRhIjp7InNvY2tldElkIjoiTXh5MHpjcVlRbkdCSXZyMUFBQUIiLCJpc1NlbnQiOnRydWV9LCJld2F5X2VuYWJsZWQiOnRydWV9LCJ1c2VyQWdlbnQiOiJQb3N0bWFuUnVudGltZS83LjQyLjAiLCJpYXQiOjE3MjcyNTY4NzksImV4cCI6MTcyNzM0MzI3OX0.GzE-q_hDHzeHNdV-icGIfKDxSnQZCXgu4hAzBTBEI4o')}`,  // Ensure the token is correct
       },
     })
       .then(response => {
