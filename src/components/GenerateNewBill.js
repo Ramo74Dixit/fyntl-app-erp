@@ -312,7 +312,6 @@ const GenerateNewBill = () => {
       </div>
       <div className="p-5 text-[#3D3F4B] ">
         <h2 className="text-[1.6rem] font-normal mb-4">Items Details -</h2>
-
         {/* Edit/Add Items Button */}
         <button
           onClick={addRow}
