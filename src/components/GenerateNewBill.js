@@ -8,14 +8,19 @@ import Next from "../assets/Next.png";
 import TemplateModal from "./TemplateModal";
 const createRow = (id) => ({
   id: id,
-  itemName: "",
+  product_info: "",       // Add product_info
+  hsn_code: "",           // Add hsn_code
   quantity: "",
   unit: "KG",
   price: "",
   taxPercent: "",
-  taxAmount: "",
-  amount: "",
+  taxAmount: "Tax Amount",
+  amount: "Amount",
+  cgst: "",               // Add cgst
+  sgst: "",               // Add sgst
+  rate: "",               // Add rate if it's relevant
 });
+
 
 const GenerateNewBill = () => {
   const [rows, setRows] = useState([createRow(1)]);
@@ -38,24 +43,45 @@ const GenerateNewBill = () => {
   const handleInputChange = (index, field, value) => {
     const newRows = [...rows];
     newRows[index][field] = value;
-
-    // Update amounts when price, quantity or tax changes
-    if (["quantity", "price", "taxPercent"].includes(field)) {
-      const { quantity, price, taxPercent } = newRows[index];
-      const amount = quantity * price;
-      const taxAmount = (amount * taxPercent) / 100;
-      newRows[index].taxAmount = taxAmount;
-      newRows[index].amount = amount + taxAmount;
+  
+    // Update amounts when price, quantity, or tax changes
+    if (["quantity", "price", "taxPercent", "cgst", "sgst", "igst"].includes(field)) {
+      const quantity = Number(newRows[index].quantity);
+      const price = Number(newRows[index].price); // Convert to number
+      const taxPercent = Number(newRows[index].taxPercent);
+  
+      const amount = quantity * price; // Base amount (before tax)
+      const taxAmount = (amount * taxPercent) / 100; // Calculate total tax
+  
+      // Assuming CGST and SGST split the tax amount equally if applicable
+      const cgst = taxPercent / 2; 
+      const sgst = taxPercent / 2; 
+      const igst = taxPercent; // For inter-state transactions
+  
+      // Update values in the row
+      newRows[index].taxAmount = taxAmount.toFixed(2); // Total tax amount
+      newRows[index].amount = (amount + taxAmount).toFixed(2); // Total amount including tax
+      newRows[index].cgst = cgst.toFixed(2);
+      newRows[index].sgst = sgst.toFixed(2);
+      newRows[index].igst = igst.toFixed(2); // Depending on whether inter-state tax applies
+  
+      // Update taxable amount (amount before tax)
+      newRows[index].taxableAmount = amount.toFixed(2);
     }
-
+  
     setRows(newRows);
   };
+  
+  
 
   const totalQuantity = rows.reduce(
     (sum, row) => sum + Number(row.quantity),
     0
   );
-  const totalTax = rows.reduce((sum, row) => sum + Number(row.taxAmount), 0);
+  const totalTax = rows.reduce(
+    (sum, row) => sum + Number(((Number(row.quantity) * Number(row.price) * Number(row.taxPercent)) / 100).toFixed(2)),
+    0
+  );
   const totalAmount = rows.reduce((sum, row) => sum + Number(row.amount), 0);
 
   const handleTemplateSelect = (template) => {
@@ -69,7 +95,10 @@ const GenerateNewBill = () => {
       alert("Authorization token is missing. Please log in again.");
       return;
     }
-
+  
+    // Check your rows structure
+    console.log("Rows data:", rows); // Debugging line
+  
     const body = {
       party: {
         gstin: "09CYLPR6774F1ZN",
@@ -92,29 +121,24 @@ const GenerateNewBill = () => {
           country: "IN",
         },
       },
-      quantities: [1899.9,67,],
-      hsn_details: [
-        {
-          hsn_code: 7801,
-          product_info: "Ankush",
-          cgst: 9,
-          sgst: 9,
-          unit: "Kgs",
-        },
-        {
-          hsn_code: 5848,
-          product_info: "Battery Scrap",
-          cgst: 9,
-          sgst: 9,
-          unit: "Kgs",
-        },
-      ],
-      rates: [184, 111],
+      quantities: rows.map((row) => row.quantity),
+      hsn_details: rows.map((row) => {
+        console.log("Row details:", row); // Debugging line
+        return {
+          hsn_code: row.hsn_code,           // Ensure this field exists in your row
+          product_info: row.product_info,   // Ensure this field exists in your row
+          cgst: row.cgst,                   // Ensure this field exists in your row
+          sgst: row.sgst,
+          igst: row.igst,                   // Ensure this field exists in your row
+          unit: row.unit                     // Ensure this field exists in your row
+        };
+      }),
+      rates: rows.map((row) => row.price),
     };
-
+  
     try {
       const response = await fetch(
-        "https://fyntl.sangrahinnovations.com/user/bill",
+        "/user/bill",
         {
           method: "PUT",
           headers: {
@@ -124,7 +148,7 @@ const GenerateNewBill = () => {
           body: JSON.stringify(body),
         }
       );
-
+  
       if (response.ok) {
         const result = await response.json();
         const downloadUrl = result.url;
@@ -323,160 +347,104 @@ const GenerateNewBill = () => {
         {/* Row Items Table */}
         <div className="w-full mb-4">
           <table className="min-w-full bg-[#F9FAFC] shadow-md">
-            <thead className="bg-gray-100 text-[#51535e]">
-              <tr>
-                <th
-                  className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-16"
-                  rowSpan="2"
-                >
-                  S No.
-                </th>
-                <th
-                  className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-96"
-                  rowSpan="2"
-                >
-                  Item Name
-                </th>
-                <th
-                  className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-28"
-                  rowSpan="2"
-                >
-                  Quantity
-                </th>
-                <th
-                  className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-28"
-                  rowSpan="2"
-                >
-                  Unit
-                </th>
-                <th
-                  className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-40"
-                  rowSpan="1"
-                >
-                  Price/Unit (without tax)
-                </th>
-                <th
-                  className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-36"
-                  colSpan="2"
-                >
-                  Tax (%)
-                </th>
-                <th
-                  className="border-b-2 border-[#989BAA] font-medium text-lg w-36"
-                  rowSpan="2"
-                >
-                  Amount
-                </th>
-              </tr>
-              <tr>
-                <th className="border-b-2 border-r-2 border-[#989BAA] font-normal text-lg">
-                  Price/Unit
-                </th>
-                <th className="border-b-2 border-r-2 border-[#989BAA] font-normal text-lg">
-                  Percent (%)
-                </th>
-                <th className="border-b-2 border-r-2 border-[#989BAA] font-normal text-lg">
-                  Amount
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, index) => (
-                <tr key={index} className="border-t">
-                  <td className="p-1 border-r-2 border-[#989BAA] text-center">
-                    {index + 1}
-                  </td>
-                  <td className="p-1 border-r-2 border-[#989BAA]">
-                    <input
-                      type="text"
-                      className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
-                      placeholder="Item Name"
-                      value={row.itemName}
-                      onChange={(e) =>
-                        handleInputChange(index, "itemName", e.target.value)
-                      }
-                    />
-                  </td>
-                  <td className="p-1 border-r-2 border-[#989BAA]">
-                    <input
-                      type="number"
-                      className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
-                      placeholder="Qty"
-                      value={row.quantity}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "quantity",
-                          Number(e.target.value)
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="p-1 border-r-2 border-[#989BAA]">
-                    <select
-                      className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
-                      value={row.unit}
-                      onChange={(e) =>
-                        handleInputChange(index, "unit", e.target.value)
-                      }
-                    >
-                      <option value="KG">KG</option>
-                      <option value="L">L</option>
-                      <option value="PCS">PCS</option>
-                    </select>
-                  </td>
-                  <td className="p-1 border-r-2 border-[#989BAA]">
-                    <input
-                      type="number"
-                      className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
-                      placeholder="Price"
-                      value={row.price}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "price",
-                          Number(e.target.value)
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="p-1 border-r-2 border-[#989BAA]">
-                    <input
-                      type="number"
-                      className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
-                      placeholder="Tax %"
-                      value={row.taxPercent}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "taxPercent",
-                          Number(e.target.value)
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="p-1 border-r-2 border-[#989BAA]">
-                    <input
-                      type="number"
-                      className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
-                      placeholder="Tax Amount"
-                      value={row.taxAmount}
-                      readOnly
-                    />
-                  </td>
-                  <td className="p-1">
-                    <input
-                      type="number"
-                      className="border p-1 w-full rounded-lg"
-                      placeholder="Amount"
-                      value={row.amount}
-                      readOnly
-                    />
-                  </td>
-                </tr>
-              ))}
-              <tr className="font-semibold bg-[#E7EDFF] text-[#1436FF]">
-                <td colSpan="2" className="p-3 text-right">
+  <thead className="bg-gray-100 text-[#51535e] ">
+    <tr>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-16" rowSpan="2">S No.</th>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-80" rowSpan="2">Item Name</th>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-28" rowSpan="2">HSN Code</th>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-28" rowSpan="2">Quantity</th>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-28" rowSpan="2">Unit</th>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-40" rowSpan="2">Price/Unit</th>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-36" colSpan="2">Tax (%)</th>
+      <th className="border-b-2 border-[#989BAA] font-medium text-lg w-36" rowSpan="2">Amount</th>
+    </tr>
+    <tr>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-normal text-lg">Percent (%)</th>
+      <th className="border-b-2 border-r-2 border-[#989BAA] font-normal text-lg">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {rows.map((row, index) => (
+      <tr key={index} className="border-t">
+        <td className="p-1 border-r-2 border-[#989BAA] text-center">{index + 1}</td>
+        <td className="p-1 border-r-2 border-[#989BAA]">
+          <input
+            type="text"
+            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            placeholder="Item Name"
+            value={row.product_info}
+            onChange={(e) => handleInputChange(index, "product_info", e.target.value)}
+          />
+        </td>
+        <td className="p-1 border-r-2 border-[#989BAA]">
+          <input
+            type="text"
+            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            placeholder="HSN Code"
+            value={row.hsn_code}
+            onChange={(e) => handleInputChange(index, "hsn_code", e.target.value)}
+          />
+        </td>
+        <td className="p-1 border-r-2 border-[#989BAA]">
+          <input
+            type="number"
+            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            placeholder="Qty"
+            value={row.quantity}
+            onChange={(e) => handleInputChange(index, "quantity", Number(e.target.value))}
+          />
+        </td>
+        <td className="p-1 border-r-2 border-[#989BAA]">
+          <select
+            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            value={row.unit}
+            onChange={(e) => handleInputChange(index, "unit", e.target.value)}
+          >
+            <option value="KG">KG</option>
+            <option value="L">L</option>
+            <option value="PCS">PCS</option>
+          </select>
+        </td>
+        <td className="p-1 border-r-2 border-[#989BAA]">
+          <input
+            type="number"
+            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            placeholder="Price"
+            value={row.price}
+            onChange={(e) => handleInputChange(index, "price", Number(e.target.value))}
+          />
+        </td>
+        <td className="p-1 border-r-2 border-[#989BAA]">
+          <input
+            type="number"
+            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            placeholder="Tax %"
+            value={row.taxPercent}
+            onChange={(e) => handleInputChange(index, "taxPercent", Number(e.target.value))}
+          />
+        </td>
+        <td className="p-1 border-r-2 border-[#989BAA]">
+          <input
+            type="number"
+            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            placeholder="Tax Amount"
+            value={row.taxAmount}
+            readOnly
+          />
+        </td>
+        <td className="p-1">
+          <input
+            type="number"
+            className="border p-1 w-full rounded-lg"
+            placeholder="Amount"
+            value={row.amount}
+            readOnly
+          />
+        </td>
+      </tr>  
+    ))}
+    <tr className="font-semibold bg-[#E7EDFF] text-[#1436FF]">
+                <td colSpan="3" className="p-3 text-right border-r-2 border-[#989BAA]">
                   TOTAL
                 </td>
                 <td className="p-3 border-r-2 border-[#989BAA] text-right">
@@ -486,12 +454,14 @@ const GenerateNewBill = () => {
                 <td className="p-3 border-r-2 border-[#989BAA] text-right"></td>
                 <td className="p-3 border-r-2 border-[#989BAA] text-right"></td>
                 <td className="p-3 border-r-2 border-[#989BAA] text-right">
-                  {totalTax}
+                  {totalTax.toFixed(2)}
                 </td>
                 <td className="p-3 text-right">{totalAmount}</td>
               </tr>
-            </tbody>
-          </table>
+
+  </tbody>
+</table>
+
         </div>
         <div className="flex items-stretch justify-end">
           {/* Next Button to open the modal */}
@@ -599,7 +569,7 @@ const GenerateNewBill = () => {
           <TemplateModal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            onTemplateSelect={handleTemplateSelect}
+            onSelect={handleTemplateSelect}
           />
         )}
       </div>
