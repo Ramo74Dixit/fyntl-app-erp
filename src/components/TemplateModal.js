@@ -12,7 +12,7 @@ const TemplateModal = ({ isOpen, onClose, onSelect }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('https://fyntl.sangrahinnovations.com/user/format', {
+      const response = await fetch('/user/format', {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -43,7 +43,7 @@ const TemplateModal = ({ isOpen, onClose, onSelect }) => {
   // Function to update selected template
   const updateSelectedTemplate = async (templateId) => {
     try {
-      const response = await fetch('https://fyntl.sangrahinnovations.com/user/format', {
+      const response = await fetch('/user/format', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -67,8 +67,8 @@ const TemplateModal = ({ isOpen, onClose, onSelect }) => {
 
   // Function to handle template selection
   const handleTemplateSelect = (template) => {
-    setSelectedTemplateId(template.bill_id); // Set selected template ID
-    updateSelectedTemplate(template.bill_id); // Call the API to update the selected template
+    setSelectedTemplateId(template._id); // Set selected template ID correctly
+    updateSelectedTemplate(template._id); // Call the API to update the selected template
     onSelect(template); // Trigger onSelect with the selected template, without closing the modal
   };
 
@@ -92,22 +92,21 @@ const TemplateModal = ({ isOpen, onClose, onSelect }) => {
                 {templates.map((template) => (
                   <div
                     key={template._id}
-                    className="relative p-2 border border-gray-200 rounded-lg hover:shadow-lg cursor-pointer flex flex-col items-center"
-                    onClick={() => handleTemplateSelect(template)} // Handle template click, without closing modal
+                    className={`relative p-2 border border-gray-200 rounded-lg hover:shadow-lg cursor-pointer flex flex-col items-center ${
+                      selectedTemplateId === template._id ? 'border-green-500' : ''
+                    }`} // Add conditional border for selected template
+                    onClick={() => handleTemplateSelect(template)}
                   >
-                    {/* Template Image */}
                     <img
                       src={template.url}
                       alt="Template"
                       className="w-full h-auto object-cover rounded-lg"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/150?text=Image+Not+Available"; // Fallback image
+                        e.target.src = 'https://via.placeholder.com/150?text=Image+Not+Available'; // Fallback image
                       }}
                     />
-                    {/* Template Name */}
                     <p className="mt-2 text-center text-sm text-gray-700">{template.name}</p>
-                    {/* Green check mark overlay */}
                     {selectedTemplateId === template._id && (
                       <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 rounded-lg">
                         <span className="text-green-500 text-4xl">&#10003;</span>

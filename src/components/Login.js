@@ -22,7 +22,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("https://fyntl.sangrahinnovations.com/user/login", {
+      const response = await axios.post("/user/login", {
         contact: `+91${phone}`,
       });
 
@@ -51,7 +51,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://fyntl.sangrahinnovations.com/user/optVerification",
+        "/user/optVerification",
         { otp: otp }, // OTP is sent in the body
         {
           headers: {
