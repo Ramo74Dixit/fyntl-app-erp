@@ -145,15 +145,15 @@ const GeneratedBills = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-16 px-4 py-6 ">
-        <div className="bg-white shadow-xl rounded-lg p-6 w-full h-40 transform transition-all duration-300 hover:scale-105">
+        <div className="bg-white shadow-xl rounded-3xl p-6 w-full h-40 transform transition-all duration-300 hover:scale-105">
           <h2 className="text-5xl text-center text-gray-800 mt-2">{totalBills}</h2>
           <p className="text-center text-gray-500 text-sm mt-4">Total Bills Generated</p>
         </div>
-        <div className="bg-white shadow-xl rounded-lg p-6 w-full h-40 transform transition-all duration-300 hover:scale-105">
+        <div className="bg-white shadow-xl rounded-3xl p-6 w-full h-40 transform transition-all duration-300 hover:scale-105">
           <h2 className="text-5xl text-center text-gray-800 mt-2">{lastMonthBills}</h2>
           <p className="text-center text-gray-500 text-sm mt-4">Bills Generated Last Month</p>
         </div>
-        <div className="bg-white shadow-xl rounded-lg p-6 w-full h-40 transform transition-all duration-300 hover:scale-105">
+        <div className="bg-white shadow-xl rounded-3xl p-6 w-full h-40 transform transition-all duration-300 hover:scale-105">
           <h2 className="text-5xl text-center text-gray-800 mt-2">{thisMonthBills}</h2>
           <p className="text-center text-gray-500 text-sm mt-4">Bills Generated This Month</p>
         </div>
