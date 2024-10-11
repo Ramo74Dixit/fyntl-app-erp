@@ -42,7 +42,8 @@
       ]
    },
    "devDependencies": {
-      "tailwindcss": "^3.4.12"
+      "tailwindcss": "^3.4.12",
+      "webpack-dev-server": "^5.1.0"
    },
    "proxy": "https://fyntl.sangrahinnovations.com"
 }
