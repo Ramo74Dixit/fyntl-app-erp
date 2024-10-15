@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { FaBusinessTime } from "react-icons/fa";
-import Additem from "../assets/Additem.png";
+import arrow from "../assets/Expand Arrow.png";
+import Additem from "../assets/Add properties.png";
 import Share from "../assets/Share.png";
 import Download from "../assets/Download.png";
 import Select from "../assets/Select.png";
 import Next from "../assets/Next.png";
 import TemplateModal from "./TemplateModal";
+import generate from "../assets/Receipt.png";
+
 const createRow = (id) => ({
   id: id,
   product_info: "",       // Add product_info
@@ -172,186 +174,185 @@ const GenerateNewBill = () => {
   };
 
   return (
-    <div className="p-2 pl-2 sm:pl-4">
-      <div className="bg-blue-200 text-blue-600 text-xl sm:text-3xl font-semibold rounded-lg p-4 flex items-center">
-        <FaBusinessTime className="text-gray-500 mr-4" />
+    <div className="p-1 pl-2 sm:pl-2 pr-2">
+      <div className="bg-blue-100 text-blue-700 text-xl sm:text-4xl font-normal rounded-lg flex items-center">
+        <img src={generate} alt="generate"/>
         Generate New Bill
       </div>
-      <div className="text-xl sm:text-2xl mt-2 font-semibold">
-        Buyer's Details
+      <div className="text-xl sm:text-2xl mt-2 font-normal">
+        Buyer's Details -
       </div>
-      <div className="flex space-x-12">
-        <div className="w-2/5 p-2 relative">
-          <div className="space-y-4 relative mt-4">
-            {/* Input 1 */}
-            <div className="relative mb-4">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
-                Name
-              </span>
-              <input
-                type="text"
-                value={tradeName} // Controlled input
-                onChange={(e) => setTradeName(e.target.value)} // Update state on input change
-                className="w-full border border-blue-500 rounded-lg p-2"
-              />
-            </div>
+      <div className="flex space-x-24">
 
-            {/* Input 2 */}
-            <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
-                Phone No
-              </span>
-              <input
-                type="text"
-                className="w-full border border-blue-500 rounded-lg p-2"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="w-1/5 p-2 relative">
-          <div className="space-y-4">
-            <div className="flex items-end space-x-4">
-              <label htmlFor="billNo" className="font-semibold">
-                Bill No:
-              </label>
-              <input
-                type="text"
-                id="billNo"
-                className="border-b-2 border-gray-300 outline-none focus:border-blue-500 w-full"
-                placeholder="Enter Bill No"
-              />
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <label htmlFor="billDate" className="font-semibold">
-                Bill Date:
-              </label>
-              <input
-                type="date"
-                id="billDate"
-                className="border-b-2 border-gray-300 outline-none focus:border-blue-500 w-full"
-              />
-            </div>
-          </div>
-        </div>
+  <div className="w-2/5 p-1 relative items-start flex flex-col">
+    <div className="space-y-4 relative mt-4">
+    
+      <div className="relative">
+        <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
+          Name
+        </span>
+        <input
+          type="text"
+          value={tradeName} // Controlled input
+          onChange={(e) => setTradeName(e.target.value)} // Update state on input change
+          className="w-full  border border-blue-500 rounded-lg p-1"
+        />
       </div>
-      <div className="flex space-x-2">
-        {/* Left Section */}
-        <div className="w-2/5 p-2 relative">
-          <span> Address Type </span>
-          {/* Input Fields for Left Section */}
-          <div className="space-y-4 relative mt-4">
-            {/* Input 1 */}
-            <div className="relative mb-4">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
-                Address
-              </span>
-              <input
-                type="text"
-                value={paddress} // Controlled input
-                onChange={(e) => setpAddress(e.target.value)} // Update state on input change
-                className="w-full border border-blue-500 rounded-lg p-2"
-              />
-            </div>
 
-            {/* Input 2 */}
-            <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
-                City PinCode
-              </span>
-              <input
-                type="text"
-                value={pincode} // Controlled input
-                onChange={(e) => setPincode(e.target.value)} // Update state on input change
-                className="w-full border border-blue-500 rounded-lg p-2"
-              />
-            </div>
-            <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
-                State
-              </span>
-              <input
-                type="text"
-                value={state} // Controlled input
-                onChange={(e) => setState(e.target.value)} // Update state on input change
-                className="w-full border border-blue-500 rounded-lg p-2"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Right Section */}
-        <div className="w-2/5 p-2 relative">
-          <label className="flex items-center mb-4">
-            <input
-              type="radio"
-              name="section"
-              className="mr-2 text-black accent-blue-500"
-              onChange={() => {
-                setIsRightEnabled(true);
-              }}
-            />
-            <span>Same as shipping address</span>
-          </label>
-          {/* Input Fields for Right Section */}
-          <div className="space-y-4 relative">
-            {/* Input 1 */}
-            <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
-                Address
-              </span>
-              <input
-                type="text"
-                value={saddress} // Controlled input
-                onChange={(e) => setsAddress(e.target.value)} // Update state on input change
-                className="w-full border border-blue-500 rounded-lg p-2"
-              />
-            </div>
-            {/* Input 2 */}
-            <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
-                City Pincode
-              </span>
-              <input
-                type="text"
-                value={spincode} // Controlled input
-                onChange={(e) => setSPincode(e.target.value)} // Update state on input change
-                className="w-full border border-blue-500 rounded-lg p-2"
-              />
-            </div>
-            {/* Input 3 */}
-            <div className="relative">
-              <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
-                State
-              </span>
-              <input
-                type="text"
-                value={sstate} // Controlled input
-                onChange={(e) => setSState(e.target.value)} // Update state on input change
-                className="w-full border border-blue-500 rounded-lg p-2"
-              />
-            </div>
-          </div>
-        </div>
+      {/* Input 2 */}
+      <div className="relative">
+        <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">
+          Phone No
+        </span>
+        <input
+          type="text"
+          className="w-full border border-blue-500 rounded-lg p-1"
+        />
       </div>
+    </div>
+  </div>
+
+  <div className="w-1/5 p-1 relative flex flex-col items-end ">
+    <div className="space-y-4">
+      <div className="flex items-end space-x-4">
+        <label htmlFor="billNo" className="font-semibold">
+          Bill No:
+        </label>
+        <input
+          type="text"
+          id="billNo"
+          className="border-b-2 border-gray-300 outline-none focus:border-blue-500 w-full"
+          placeholder="Enter Bill No"
+        />
+      </div>
+
+      <div className="flex items-center space-x-4">
+        <label htmlFor="billDate" className="font-semibold">
+          Bill Date:
+        </label>
+        <input
+          type="date"
+          id="billDate"
+          className="border-b-2 border-gray-300 outline-none focus:border-blue-500 w-full"
+        />
+      </div>
+    </div>
+  </div>
+
+</div>
+<div className="flex flex-wrap sm:flex-nowrap sm:space-x-24 space-x-0">
+  {/* Left Section */}
+  <div className="w-full sm:w-2/5 p-2 pt-2 relative flex flex-col items-start">
+    <div className="flex items-center">
+      <span>Address Type</span>
+      <img src={arrow} alt="arrow" className="ml-2 w-4 h-4" />
+    </div>
+
+    <div className="space-y-4 relative mt-2">
+      {/* Input 1 */}
+      <div className="relative mb-4">
+        <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">Address</span>
+        <input
+          type="text"
+          value={paddress} // Controlled input
+          onChange={(e) => setpAddress(e.target.value)} // Update state on input change
+          className="w-full border border-blue-500 rounded-lg p-2"
+        />
+      </div>
+
+      {/* Input 2 */}
+      <div className="relative">
+        <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">City PinCode</span>
+        <input
+          type="text"
+          value={pincode} // Controlled input
+          onChange={(e) => setPincode(e.target.value)} // Update state on input change
+          className="w-full border border-blue-500 rounded-lg p-2"
+        />
+      </div>
+
+      {/* Input 3 */}
+      <div className="relative">
+        <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">State</span>
+        <input
+          type="text"
+          value={state} // Controlled input
+          onChange={(e) => setState(e.target.value)} // Update state on input change
+          className="w-full border border-blue-500 rounded-lg p-2"
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* Right Section */}
+  <div className="w-full sm:w-2/5 p-2 relative flex flex-col items-start">
+    <label className="inline-flex items-center mb-4">
+      <span>Same as shipping address</span>
+      <input
+        type="radio"
+        name="section"
+        className="ml-2 text-black accent-blue-500"
+        onChange={() => {
+          setIsRightEnabled(true);
+        }}
+      />
+    </label>
+
+    {/* Input Fields for Right Section */}
+    <div className="space-y-4 relative mt-2">
+      {/* Input 1 */}
+      <div className="relative mb-4">
+        <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">Address</span>
+        <input
+          type="text"
+          value={saddress} // Controlled input
+          onChange={(e) => setsAddress(e.target.value)} // Update state on input change
+          className="w-full border border-blue-500 rounded-lg p-2"
+        />
+      </div>
+
+      {/* Input 2 */}
+      <div className="relative">
+        <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">City Pincode</span>
+        <input
+          type="text"
+          value={spincode} // Controlled input
+          onChange={(e) => setSPincode(e.target.value)} // Update state on input change
+          className="w-full border border-blue-500 rounded-lg p-2"
+        />
+      </div>
+
+      {/* Input 3 */}
+      <div className="relative">
+        <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-black">State</span>
+        <input
+          type="text"
+          value={sstate} // Controlled input
+          onChange={(e) => setSState(e.target.value)} // Update state on input change
+          className="w-full border border-blue-500 rounded-lg p-2"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
       <div className="p-5 text-[#3D3F4B] ">
-        <h2 className="text-[1.6rem] font-normal mb-4">Items Details -</h2>
-        {/* Edit/Add Items Button */}
+        <h2 className="text-2xl font-normal mb-2">Items Details</h2>
+      
         <button
           onClick={addRow}
-          className="flex items-center text-lg gap-2 px-3 py-[0.35rem] bg-[#eff0f4] border  border-[#BCC3D5] rounded-md shadow-md mb-4 hover:bg-gray-200"
-        >
+          className="flex items-center text-lg gap-1 px-2  bg-[#eff0f4] border  border-[#BCC3D5] rounded-md shadow-md mb-4 hover:bg-gray-200" >
           <img src={Additem} alt="logo"></img>
           Edit/Add Items
         </button>
-        {/* Row Items Table */}
         <div className="w-full mb-4">
           <table className="min-w-full bg-[#F9FAFC] shadow-md">
-  <thead className="bg-gray-100 text-[#51535e] ">
+  <thead className=" text-[#51535e] ">
     <tr>
       <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-16" rowSpan="2">S No.</th>
       <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-80" rowSpan="2">Item Name</th>
-      <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-28" rowSpan="2">HSN Code</th>
       <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-28" rowSpan="2">Quantity</th>
       <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-28" rowSpan="2">Unit</th>
       <th className="border-b-2 border-r-2 border-[#989BAA] font-medium text-lg w-40" rowSpan="2">Price/Unit</th>
@@ -370,25 +371,18 @@ const GenerateNewBill = () => {
         <td className="p-1 border-r-2 border-[#989BAA]">
           <input
             type="text"
-            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            className="bg-gray-50 w-full "
             placeholder="Item Name"
             value={row.product_info}
             onChange={(e) => handleInputChange(index, "product_info", e.target.value)}
           />
         </td>
-        <td className="p-1 border-r-2 border-[#989BAA]">
-          <input
-            type="text"
-            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
-            placeholder="HSN Code"
-            value={row.hsn_code}
-            onChange={(e) => handleInputChange(index, "hsn_code", e.target.value)}
-          />
-        </td>
+       
+        
         <td className="p-1 border-r-2 border-[#989BAA]">
           <input
             type="number"
-            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            className="bg-gray-50 w-full "
             placeholder="Qty"
             value={row.quantity}
             onChange={(e) => handleInputChange(index, "quantity", Number(e.target.value))}
@@ -396,7 +390,7 @@ const GenerateNewBill = () => {
         </td>
         <td className="p-1 border-r-2 border-[#989BAA]">
           <select
-            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            className="bg-gray-50 w-full "
             value={row.unit}
             onChange={(e) => handleInputChange(index, "unit", e.target.value)}
           >
@@ -408,7 +402,7 @@ const GenerateNewBill = () => {
         <td className="p-1 border-r-2 border-[#989BAA]">
           <input
             type="number"
-            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            className="bg-gray-50 w-full "
             placeholder="Price"
             value={row.price}
             onChange={(e) => handleInputChange(index, "price", Number(e.target.value))}
@@ -417,7 +411,7 @@ const GenerateNewBill = () => {
         <td className="p-1 border-r-2 border-[#989BAA]">
           <input
             type="number"
-            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            className="bg-gray-50 w-full "
             placeholder="Tax %"
             value={row.taxPercent}
             onChange={(e) => handleInputChange(index, "taxPercent", Number(e.target.value))}
@@ -426,7 +420,7 @@ const GenerateNewBill = () => {
         <td className="p-1 border-r-2 border-[#989BAA]">
           <input
             type="number"
-            className="border-2 border-[#EFF0F4] p-1 w-full rounded-xl"
+            className="bg-gray-50 w-full "
             placeholder="Tax Amount"
             value={row.taxAmount}
             readOnly
@@ -435,7 +429,7 @@ const GenerateNewBill = () => {
         <td className="p-1">
           <input
             type="number"
-            className="border p-1 w-full rounded-lg"
+            className="bg-gray-50 w-full "
             placeholder="Amount"
             value={row.amount}
             readOnly
@@ -451,7 +445,7 @@ const GenerateNewBill = () => {
                   {totalQuantity}
                 </td>
                 <td className="p-3 border-r-2 border-[#989BAA] text-right"></td>
-                <td className="p-3 border-r-2 border-[#989BAA] text-right"></td>
+               
                 <td className="p-3 border-r-2 border-[#989BAA] text-right"></td>
                 <td className="p-3 border-r-2 border-[#989BAA] text-right">
                   {totalTax.toFixed(2)}
@@ -464,9 +458,8 @@ const GenerateNewBill = () => {
 
         </div>
         <div className="flex items-stretch justify-end">
-          {/* Next Button to open the modal */}
           <button
-            className="flex items-center font-medium text-lg px-4 py-2 bg-[#F9FAFC] rounded-lg mr-6 mt-8 text-[#1436FF]"
+            className="flex items-center font-medium text-lg px-2 py-2 bg-[#F9FAFC] rounded-lg mr-6 mt-2 text-[#1436FF]"
             onClick={() => setIsModalOpen(true)}
           >
             <i className="fas fa-arrow-right"></i>
@@ -477,7 +470,7 @@ const GenerateNewBill = () => {
           {/* Next Button to open the modal */}
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center font-medium text-lg px-4 py-2 bg-[#F9FAFC] rounded-lg mr-6 mt-8 text-[#1436FF]"
+            className="flex items-center font-medium text-lg px-4 py-2 bg-[#F9FAFC] rounded-lg mr-6 mt-2 text-[#1436FF]"
           >
             <i className="fas fa-arrow-right"></i>
             Next
@@ -500,11 +493,11 @@ const GenerateNewBill = () => {
         {/* Modal */}
         {showModal && (
           <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-50">
-            <div className="relative bg-white rounded-lg shadow-lg shadow-blue-200 px-12 py-7">
+            <div className="relative bg-white rounded-lg shadow-lg shadow-blue-200 px-8 py-8">
               {/* Close (X) Button */}
               <button
                 onClick={() => setShowModal(false)}
-                className="absolute top-4 right-4 text-gray-600 transition-transform duration-300 ease-in-out transform hover:rotate-90"
+                className="absolute top-2 right-4 text-gray-600 transition-transform duration-300 ease-in-out transform hover:rotate-90"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -532,7 +525,7 @@ const GenerateNewBill = () => {
                   />
                   <button
                     onClick={downloadPDF}
-                    className="flex items-center gap-2 px-4 py-2 text-[#1436FF] bg-[#EFF2FF] rounded-full hover:bg-[#DDE6FF] transition-all"
+                    className="flex items-center gap-1 px-4 py-2 text-[#1436FF] bg-[#EFF2FF] rounded-full hover:bg-[#DDE6FF] transition-all"
                   >
                     Download as PDF
                   </button>
@@ -545,7 +538,7 @@ const GenerateNewBill = () => {
                   />
                   <button
                     onClick={() => alert("Share")}
-                    className="flex items-center gap-2 px-4 py-2 text-[#1436FF] bg-[#EFF2FF] rounded-full hover:bg-[#DDE6FF] transition-all"
+                    className="flex items-center gap-1 px-4 py-2 text-[#1436FF] bg-[#EFF2FF] rounded-full hover:bg-[#DDE6FF] transition-all"
                   >
                     Share
                   </button>
@@ -555,15 +548,6 @@ const GenerateNewBill = () => {
           </div>
         )}
 
-        {/* Generate Bill Section */}
-        <div className="text-right">
-          <button
-            onClick={downloadPDF}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg mt-4"
-          >
-            Generate PDF
-          </button>
-        </div>
         {/* Template Modal Section */}
         {isModalOpen && (
           <TemplateModal

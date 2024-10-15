@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { FaBusinessTime } from 'react-icons/fa';
 import TemplateModal from './TemplateModal'; // Import the modal component
+import upload from '../assets/Upload.png'
+import arrow from '../assets/Expand Arrow.png'
+import addp from '../assets/Add properties.png'
+import bills from '../assets/Bill.png'
 
 const EwayBills = () => {
   const [isLeftEnabled, setIsLeftEnabled] = useState(false);
@@ -28,27 +32,24 @@ const EwayBills = () => {
 
   return (
     <div className='p-2 pl-2 sm:pl-4'>
-      <div className='bg-blue-200 text-blue-600 text-xl sm:text-3xl font-semibold rounded-lg p-4 flex items-center'>
-        <FaBusinessTime className="text-gray-500 mr-4" />
+      <div className='bg-blue-100 text-blue-600 text-xl sm:text-3xl font-semibold rounded-lg  flex items-center'>
+        <img src={bills} alt="billimd"/>
         E-Way Bills
       </div>
-      <div className='text-xl sm:text-3xl mt-2 font-semibold'>
+      <div className='text-xl sm:text-3xl mt-2 '>
         Generate E-Way Bills
       </div>
 
-      {/* Your existing form content goes here */}
+  
       <div className="flex space-x-4 mt-4">
-        <button className="bg-transparent text-black px-4 py-2">Invoice</button>
-        <label className="bg-blue-500 text-white rounded-lg px-4 py-2 cursor-pointer">
-          Upload Doc.
+        <button className="bg-transparent text-black px-4 py-2 font-semibold flex item-center">Invoice<img src={arrow} alt="arrow"/></button>
+        <label className="bg-blue-100 text-blue-600 font-semibold rounded-lg px-4 py-2 cursor-pointer flex items-center">
+         <img src={upload} alt="arrow"/> Upload Doc.
           <input type="file" className="hidden" />
         </label>
       </div>
-      
-      {/* Transportation Options */}
       <div className="flex space-x-4">
-        {/* Left Section (Road) */}
-        <div className="w-1/2 p-4 relative">
+        <div className="w-2/5 p-4 relative">
           <label className="flex items-center mb-4">
             <input
               type="radio"
@@ -64,17 +65,17 @@ const EwayBills = () => {
           <div className="space-y-8 relative">
             <div className="relative">
               <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Transporter Id</span>
-              <input type="text" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isLeftEnabled} />
+              <input type="text" className="w-full border border-blue-500 rounded-lg p-1" disabled={!isLeftEnabled} />
             </div>
             <div className="relative">
               <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Vehicle Number</span>
-              <input type="text" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isLeftEnabled} />
+              <input type="text" className="w-full border border-blue-500 rounded-lg p-1" disabled={!isLeftEnabled} />
             </div>
           </div>
         </div>
 
         {/* Right Section (Rail/Air/Ship) */}
-        <div className="w-1/2 p-4 relative">
+        <div className="w-2/5 p-4 relative">
           <label className="flex items-center mb-4">
             <input
               type="radio"
@@ -90,24 +91,24 @@ const EwayBills = () => {
           <div className="space-y-8 relative">
             <div className="relative">
               <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Transporter Id</span>
-              <input type="text" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isRightEnabled} />
+              <input type="text" className="w-full border border-blue-500 rounded-lg p-1" disabled={!isRightEnabled} />
             </div>
             <div className="relative">
               <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Transport Document Number</span>
-              <input type="text" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isRightEnabled} />
+              <input type="text" className="w-full border border-blue-500 rounded-lg p-1" disabled={!isRightEnabled} />
             </div>
             <div className="relative">
               <span className="absolute -top-3 left-2 text-sm bg-white px-1 text-blue-500">Date on the document</span>
-              <input type="date" className="w-full border border-blue-500 rounded-lg p-2" disabled={!isRightEnabled} />
+              <input type="date" className="w-full border border-blue-500 rounded-lg p-1" disabled={!isRightEnabled} />
             </div>
           </div>
         </div>
       </div>
 
       {/* Item Details */}
-      <div className='text-xl sm:text-3xl mt-2 font-semibold'>Item Details-</div>
+      <div className='text-xl sm:text-3xl mt-2 '>Item Details-</div>
       <div className="flex justify-start mt-2 mb-2">
-        <button onClick={addRow} className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded">Edit/Add Item</button>
+        <button onClick={addRow} className="bg-gray-200 hover:bg-gray-300 text-black font-bold flex item-centre py-2 px-4 rounded"><img src={addp} alt="add"/>Edit/Add Item</button>
       </div>
 
       {/* Items Table */}
@@ -192,6 +193,18 @@ const EwayBills = () => {
                     onChange={(e) => {
                       const updatedRows = [...rows];
                       updatedRows[index].taxPercent = e.target.value;
+                      setRows(updatedRows);
+                    }}
+                  />
+                </td>
+                <td className="px-4 py-2 border">
+                  <input
+                    type="text"
+                    className="w-full p-2"
+                    value={row.amount}
+                    onChange={(e) => {
+                      const updatedRows = [...rows];
+                      updatedRows[index].amount = e.target.value;
                       setRows(updatedRows);
                     }}
                   />

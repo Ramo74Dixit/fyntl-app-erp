@@ -114,8 +114,8 @@ const GeneratedBills = () => {
   };
 
   return (
-    <div className="p-4">
-      <div className="flex items-center space-x-2 h-14 bg-[#E7EDFF] border rounded-lg p-5 text-[#1436FF] font-bold text-3xl">
+    <div className="p-4 pr-4">
+      <div className="flex items-center space-x-2 h-14 bg-blue-100 border rounded-lg p-5 text-[#1436FF] font-normal text-4xl p-2">
         <FaFileAlt className="text-3xl" />
         <span>Generated Bills</span>
       </div>
@@ -160,7 +160,7 @@ const GeneratedBills = () => {
       </div>
 
       <div className="p-4 overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300">
+        <table className="min-w-full  border bg-gray-50 border-gray-300 rounded-lg">
           <thead>
             <tr>
               <th className="px-4 py-2 text-left">Bill ID</th>
